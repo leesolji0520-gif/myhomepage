@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>명신여고 코더 포트폴리오 - 개발 로그</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font 설정 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* 다크 테마를 위한 사용자 정의 색상 및 효과 */
+        :root {
+            --color-primary: #00BCD4; /* 청록색 포인트 */
+            --color-secondary: #FF4081; /* 마젠타 보조 포인트 */
+            --color-bg: #121212; /* 매우 어두운 배경 */
+            --color-card: #1E1E1E; /* 카드 배경 */
+            --color-text: #E0E0E0; /* 밝은 텍스트 */
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        /* 네온 텍스트 효과 */
+        .neon-text {
+            text-shadow: 0 0 5px var(--color-primary), 0 0 10px var(--color-primary);
+        }
+
+        /* 카드 호버 시 네온 빛 효과 (JS에서 제어) */
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.7);
+        }
+        
+        /* 모달 스타일 */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- 1. 헤더 (고정 네비게이션) -->
+    <header class="sticky top-0 z-50 bg-[var(--color-card)] shadow-lg shadow-black/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
+            <a href="#home" class="text-2xl font-extrabold tracking-wider neon-text transition duration-300">
+                MYEONGSHIN CODER
+            </a>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#projects" class="text-[var(--color-text)] hover:text-[var(--color-primary)] transition duration-200 text-sm sm:text-base">작품</a></li>
+                    <li><a href="#about" class="text-[var(--color-text)] hover:text-[var(--color-primary)] transition duration-200 text-sm sm:text-base">소개</a></li>
+                    <li><a href="#contact" class="text-[var(--color-text)] hover:text-[var(--color-primary)] transition duration-200 text-sm sm:text-base">연락</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        
+        <!-- 2. 홈 섹션 (Hero) -->
+        <section id="home" class="min-h-[90vh] flex flex-col items-center justify-center text-center p-8">
+            <h1 class="text-4xl sm:text-6xl font-black mb-4 tracking-tight">
+                <span class="text-white">HELLO!</span>
+                <span class="neon-text block mt-2 sm:inline"> 이솔지입니다 </span>
+            </h1>
+            <p class="text-lg sm:text-2xl text-gray-400 mb-8 max-w-2xl">
+                앱과 챗봇 제작에 진심인 1학년 학생의 개발 로그를 탐색해 보세요.
+            </p>
+            <a href="#projects" class="px-8 py-3 text-lg font-bold rounded-full bg-[var(--color-primary)] text-black shadow-lg hover:bg-cyan-300 transition duration-300 transform hover:scale-105">
+                작품 탐색하기 →
+            </a>
+        </section>
+
+        <!-- 3. 프로젝트 섹션 (Grid) -->
+        <section id="projects" class="py-16 px-4 sm:px-8 lg:px-16 bg-[var(--color-bg)]">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 border-b-2 border-[var(--color-primary)] inline-block mx-auto pb-2">
+                ✨ 나의 작품들 (Projects)
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                
+                <!-- 프로젝트 카드 1: 스마트 학습 도우미 앱 -->
+                <article class="project-card bg-[var(--color-card)] p-6 rounded-xl cursor-pointer hover:shadow-cyan-600/50" data-project-id="1">
+                    <div class="h-40 bg-gray-800 rounded-lg mb-4 flex items-center justify-center text-gray-500 text-xl"></div>
+                    <h3 class="text-2xl font-semibold mb-2 text-[var(--color-primary)]">스마트 학습 도우미 앱</h3>
+                    <p class="text-gray-400 text-sm mb-3">#Python #MachineLearning #UX/UI</p>
+                    <p class="text-gray-300">AI를 활용하여 개인의 학습 패턴을 분석하고 최적의 스케줄을 제공하는 앱입니다.</p>
+                </article>
+
+                <!-- 프로젝트 카드 2: 학교 정보 안내 챗봇 -->
+                <article class="project-card bg-[var(--color-card)] p-6 rounded-xl cursor-pointer hover:shadow-cyan-600/50" data-project-id="2">
+                    <div class="h-40 bg-gray-800 rounded-lg mb-4 flex items-center justify-center text-gray-500 text-xl"></div>
+                    <h3 class="text-2xl font-semibold mb-2 text-[var(--color-primary)]">명신여고 안내 챗봇 (M-Bot)</h3>
+                    <p class="text-gray-400 text-sm mb-3">#NodeJS #APIIntegration #Dialogflow</p>
+                    <p class="text-gray-300">학교 생활, 시험 일정, 동아리 정보를 실시간으로 알려주는 챗봇 서비스입니다.</p>
+                </article>
+
+                <!-- 프로젝트 카드 3: 반응형 게임 웹사이트 -->
+                <article class="project-card bg-[var(--color-card)] p-6 rounded-xl cursor-pointer hover:shadow-cyan-600/50" data-project-id="3">
+                    <div class="h-40 bg-gray-800 rounded-lg mb-4 flex items-center justify-center text-gray-500 text-xl"></div>
+                    <h3 class="text-2xl font-semibold mb-2 text-[var(--color-primary)]">순발력 테스트 웹 게임</h3>
+                    <p class="text-gray-400 text-sm mb-3">#HTML #CSS #JavaScript</p>
+                    <p class="text-gray-300">DOM 조작과 애니메이션을 연습하기 위해 만든 빠르고 중독성 있는 미니 웹 게임입니다.</p>
+                </article>
+
+            </div>
+        </section>
+        
+        <!-- 4. 자기 소개 및 기술 스택 섹션 -->
+        <section id="about" class="py-16 px-4 sm:px-8 lg:px-16">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 border-b-2 border-[var(--color-secondary)] inline-block mx-auto pb-2">
+                🙋‍♀️ 명신여고 코더는?
+            </h2>
+
+            <div class="max-w-4xl mx-auto bg-[var(--color-card)] p-8 rounded-xl shadow-xl">
+                <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                    명신여고 1학년, 코딩에 푹 빠진 학생입니다. 단순히 코드를 짜는 것을 넘어, **사용자의 문제를 해결**하고 **즐거움을 주는 서비스**를 만드는 것을 목표로 합니다. 특히 데이터 분석과 AI 기술에 관심이 많습니다.
+                </p>
+                
+                <h3 class="text-2xl font-semibold mb-4 text-[var(--color-secondary)]">주요 기술 스택</h3>
+                <div class="flex flex-wrap gap-3">
+                    <span class="bg-gray-700 text-sm font-medium px-4 py-1 rounded-full hover:bg-gray-600 transition">Python</span>
+                    <span class="bg-gray-700 text-sm font-medium px-4 py-1 rounded-full hover:bg-gray-600 transition">JavaScript (ES6+)</span>
+                    <span class="bg-gray-700 text-sm font-medium px-4 py-1 rounded-full hover:bg-gray-600 transition">HTML5 & CSS3</span>
+                    <span class="bg-gray-700 text-sm font-medium px-4 py-1 rounded-full hover:bg-gray-600 transition">Tailwind CSS (반응형)</span>
+                    <span class="bg-gray-700 text-sm font-medium px-4 py-1 rounded-full hover:bg-gray-600 transition">Node.js</span>
+                    <span class="bg-gray-700 text-sm font-medium px-4 py-1 rounded-full hover:bg-gray-600 transition">Git/GitHub</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 연락 섹션 -->
+        <section id="contact" class="py-16 px-4 sm:px-8 lg:px-16">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12 border-b-2 border-white inline-block mx-auto pb-2">
+                ✉️ Contact Me
+            </h2>
+            <div class="max-w-xl mx-auto text-center">
+                <p class="text-gray-300 text-lg mb-6">
+                    협업, 기술 토론, 격려의 말씀 모두 환영합니다!
+                </p>
+                <div class="flex flex-col space-y-4">
+                    <a href="mailto:your.email@example.com" class="px-6 py-3 bg-gray-800 text-[var(--color-primary)] font-bold rounded-lg hover:bg-gray-700 transition duration-300">
+                        Email: your.email@example.com
+                    </a>
+                    <a href="https://github.com/yourusername" target="_blank" class="px-6 py-3 bg-gray-800 text-white font-bold rounded-lg hover:bg-gray-700 transition duration-300">
+                        GitHub 프로필 보기
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="bg-[var(--color-card)] py-6 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 명신여고 코더. Creative Coding Portfolio. Powered by Passion.</p>
+    </footer>
+
+
+    <!-- 프로젝트 상세 정보 모달 (숨겨져 있음) -->
+    <div id="project-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-[var(--color-card)] p-8 rounded-xl max-w-2xl w-full shadow-2xl border border-[var(--color-primary)] relative transform scale-95 transition-transform duration-300" id="modal-content-container">
+            <button id="modal-close" class="absolute top-4 right-4 text-2xl text-[var(--color-primary)] hover:text-[var(--color-secondary)] transition">&times;</button>
+            <h3 id="modal-title" class="text-3xl font-bold mb-4 neon-text"></h3>
+            <p id="modal-tech" class="text-[var(--color-secondary)] mb-4 text-sm font-medium"></p>
+            <p id="modal-description" class="text-gray-300 mb-6 leading-relaxed"></p>
+            <div id="modal-details" class="text-gray-400 space-y-2">
+                <!-- 상세 내용이 여기에 추가됩니다 -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // 프로젝트 상세 데이터를 위한 JSON 객체
+        const projectsData = [
+            {
+                id: 1,
+                title: "스마트 학습 도우미 앱",
+                tech: "Python, TensorFlow, Swift (Mockup), Firebase (Mockup)",
+                summary: "AI를 활용하여 개인의 학습 패턴을 분석하고 최적의 스케줄을 제공하는 앱입니다.",
+                details: [
+                    "사용자 맞춤형 오답 노트 자동 생성 기능.",
+                    "집중도 향상을 위한 포모도로 타이머 및 통계 제공.",
+                    "주요 알고리즘: K-means Clustering을 이용한 학습 그룹 분류.",
+                    "개발 목표: 낭비되는 학습 시간을 최소화하고 효율을 극대화.",
+                ]
+            },
+            {
+                id: 2,
+                title: "명신여고 안내 챗봇 (M-Bot)",
+                tech: "Node.js, Express, Dialogflow, KakaoTalk API (Mockup)",
+                summary: "학교 생활, 시험 일정, 동아리 정보를 실시간으로 알려주는 챗봇 서비스입니다.",
+                details: [
+                    "자연어 처리(NLP)를 이용한 질의 응답 시스템 구축.",
+                    "학교 공지사항 API 연동 (Mock Data).",
+                    "주요 기능: 급식 정보, 주요 행사 일정, FAQ 자동 응답.",
+                    "개발 목표: 학생들의 정보 접근성을 높이고 교직원의 업무 부담 경감.",
+                ]
+            },
+            {
+                id: 3,
+                title: "순발력 테스트 웹 게임",
+                tech: "HTML5, CSS3, Vanilla JavaScript",
+                summary: "DOM 조작과 애니메이션을 연습하기 위해 만든 빠르고 중독성 있는 미니 웹 게임입니다.",
+                details: [
+                    "밀리초(ms) 단위의 반응 속도 측정 및 순위 기록.",
+                    "반응형 디자인으로 모바일에서도 플레이 가능.",
+                    "개발 목표: JavaScript 이벤트 리스너와 타이머 함수의 숙련도 향상.",
+                ]
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectCards = document.querySelectorAll('.project-card');
+            const modal = document.getElementById('project-modal');
+            const modalCloseButton = document.getElementById('modal-close');
+            const modalTitle = document.getElementById('modal-title');
+            const modalTech = document.getElementById('modal-tech');
+            const modalDescription = document.getElementById('modal-description');
+            const modalDetails = document.getElementById('modal-details');
+            const modalContainer = document.getElementById('modal-content-container');
+
+            // 카드 클릭 이벤트 리스너
+            projectCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const projectId = parseInt(e.currentTarget.dataset.projectId);
+                    const project = projectsData.find(p => p.id === projectId);
+                    
+                    if (project) {
+                        // 모달 내용 채우기
+                        modalTitle.textContent = project.title;
+                        modalTech.textContent = `[사용 기술] ${project.tech}`;
+                        modalDescription.textContent = project.summary;
+                        
+                        // 상세 리스트 생성
+                        modalDetails.innerHTML = ''; // 초기화
+                        const ul = document.createElement('ul');
+                        ul.className = 'list-disc list-inside space-y-1 ml-4';
+                        project.details.forEach(detail => {
+                            const li = document.createElement('li');
+                            li.textContent = detail;
+                            ul.appendChild(li);
+                        });
+                        modalDetails.appendChild(ul);
+
+                        // 모달 표시
+                        modal.classList.remove('hidden');
+                        // 애니메이션 효과
+                        setTimeout(() => {
+                             modalContainer.classList.remove('scale-95');
+                             modalContainer.classList.add('scale-100');
+                        }, 10);
+                        document.body.style.overflow = 'hidden'; // 스크롤 잠금
+                    }
+                });
+            });
+
+            // 모달 닫기 함수
+            const closeModal = () => {
+                modalContainer.classList.remove('scale-100');
+                modalContainer.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = ''; // 스크롤 잠금 해제
+                }, 300); // 애니메이션 시간과 일치
+            };
+
+            // 닫기 버튼 이벤트
+            modalCloseButton.addEventListener('click', closeModal);
+
+            // 모달 외부 클릭 이벤트 (배경 클릭)
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // ESC 키로 모달 닫기
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+            
+            // Intersection Observer for Scroll Effects (Optional, but adds polish)
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-8');
+                        observer.unobserve(entry.target); // 한 번만 실행
+                    }
+                });
+            }, {
+                threshold: 0.1,
+            });
+
+            // 모든 섹션에 관찰자 연결
+            document.querySelectorAll('section').forEach(section => {
+                if (section.id !== 'home') {
+                    section.classList.add('opacity-0', 'translate-y-8', 'transition', 'duration-700', 'ease-out');
+                    observer.observe(section);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
