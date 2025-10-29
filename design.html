@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성격 유형별 방 디자인 추천</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .question-section {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-color: #667eea;
+        }
+
+        .option-icon {
+            font-size: 2em;
+            margin-right: 15px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .option-desc {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .personality-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .design-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .design-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .design-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .design-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .design-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .design-card li {
+            padding: 8px 0;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+
+        .design-card li:before {
+            content: "✓";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .restart-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            margin-top: 30px;
+        }
+
+        .restart-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .option {
+                padding: 15px;
+            }
+
+            .option-icon {
+                font-size: 1.5em;
+                min-width: 40px;
+            }
+
+            .design-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 성격 유형별 방 디자인 추천</h1>
+            <p>나만의 완벽한 공간을 찾아보세요</p>
+        </div>
+
+        <div class="content">
+            <div id="quiz" class="quiz">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+
+                <div class="question-section" id="q1">
+                    <div class="question">1. 주말 오후, 당신은 어떻게 시간을 보내나요?</div>
+                    <div class="options">
+                        <div class="option" data-q="1" data-type="I">
+                            <div class="option-icon">📚</div>
+                            <div class="option-text">
+                                <div class="option-title">집에서 편안하게</div>
+                                <div class="option-desc">책을 읽거나 영화를 보며 혼자만의 시간을 즐긴다</div>
+                            </div>
+                        </div>
+                        <div class="option" data-q="1" data-type="E">
+                            <div class="option-icon">👥</div>
+                            <div class="option-text">
+                                <div class="option-title">친구들과 함께</div>
+                                <div class="option-desc">카페나 외부에서 사람들과 만나며 활동적으로 보낸다</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-section" id="q2" style="display:none;">
+                    <div class="question">2. 물건을 정리할 때 당신의 스타일은?</div>
+                    <div class="options">
+                        <div class="option" data-q="2" data-type="M">
+                            <div class="option-icon">✨</div>
+                            <div class="option-text">
+                                <div class="option-title">미니멀하게</div>
+                                <div class="option-desc">필요한 것만 남기고 깔끔하게 정리한다</div>
+                            </div>
+                        </div>
+                        <div class="option" data-q="2" data-type="C">
+                            <div class="option-icon">🎨</div>
+                            <div class="option-text">
+                                <div class="option-title">컬렉션 중심으로</div>
+                                <div class="option-desc">좋아하는 물건들을 모아서 디스플레이한다</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-section" id="q3" style="display:none;">
+                    <div class="question">3. 색상 선호도는 어떤가요?</div>
+                    <div class="options">
+                        <div class="option" data-q="3" data-type="N">
+                            <div class="option-icon">🤍</div>
+                            <div class="option-text">
+                                <div class="option-title">중성 톤</div>
+                                <div class="option-desc">흰색, 베이지, 그레이 등 차분한 색상을 선호한다</div>
+                            </div>
+                        </div>
+                        <div class="option" data-q="3" data-type="B">
+                            <div class="option-icon">🌈</div>
+                            <div class="option-text">
+                                <div class="option-title">밝은 색상</div>
+                                <div class="option-desc">파스텔이나 비비드한 컬러로 포인트를 준다</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-section" id="q4" style="display:none;">
+                    <div class="question">4. 방에서 가장 중요하게 생각하는 것은?</div>
+                    <div class="options">
+                        <div class="option" data-q="4" data-type="F">
+                            <div class="option-icon">💡</div>
+                            <div class="option-text">
+                                <div class="option-title">기능성</div>
+                                <div class="option-desc">실용적이고 효율적인 공간 활용</div>
+                            </div>
+                        </div>
+                        <div class="option" data-q="4" data-type="A">
+                            <div class="option-icon">🎭</div>
+                            <div class="option-text">
+                                <div class="option-title">분위기</div>
+                                <div class="option-desc">편안하고 아늑한 감성적인 공간</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="btn" id="resultBtn" style="display:none;" onclick="showResult()">결과 보기</button>
+                </div>
+            </div>
+
+            <div id="result" class="result">
+                <div style="text-align: center;">
+                    <div class="personality-badge" id="personalityType"></div>
+                    <h2 id="personalityTitle" style="color: #333; margin-bottom: 15px;"></h2>
+                    <p id="personalityDesc" style="color: #666; font-size: 1.1em; line-height: 1.6;"></p>
+                </div>
+
+                <div class="design-grid" id="designRecommendations"></div>
+
+                <div class="btn-container">
+                    <button class="btn restart-btn" onclick="restart()">다시 시작하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const answers = {};
+        let currentQ = 1;
+        const totalQ = 4;
+
+        document.querySelectorAll('.option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const q = this.dataset.q;
+                const type = this.dataset.type;
+                
+                document.querySelectorAll(`[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                answers[q] = type;
+                
+                updateProgress();
+                
+                setTimeout(() => {
+                    if(currentQ < totalQ) {
+                        document.getElementById(`q${currentQ}`).style.display = 'none';
+                        currentQ++;
+                        document.getElementById(`q${currentQ}`).style.display = 'block';
+                    } else {
+                        document.getElementById('resultBtn').style.display = 'inline-block';
+                    }
+                }, 300);
+            });
+        });
+
+        function updateProgress() {
+            const progress = (Object.keys(answers).length / totalQ) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showResult() {
+            const personality = answers[1] + answers[2] + answers[3] + answers[4];
+            
+            const designs = {
+                'IMNF': {
+                    type: '미니멀 모던',
+                    title: '깔끔한 완벽주의자',
+                    desc: '당신은 단순함 속의 기능미를 추구하는 스타일입니다. 불필요한 장식 없이 꼭 필요한 것만으로 구성된 공간을 선호합니다.',
+                    colors: ['화이트', '라이트 그레이', '블랙 포인트'],
+                    furniture: ['심플한 라인의 가구', '수납이 숨겨진 디자인', '멀티 기능 가구'],
+                    decor: ['최소한의 장식', '기하학적 패턴', '간접 조명']
+                },
+                'IMNA': {
+                    type: '스칸디 하우스',
+                    title: '아늑함을 사랑하는 당신',
+                    desc: '북유럽의 따뜻함과 미니멀함이 조화된 공간을 좋아합니다. 자연스러운 분위기 속에서 편안함을 느낍니다.',
+                    colors: ['아이보리', '베이지', '우드 톤'],
+                    furniture: ['원목 가구', '낮은 높이의 소파', '러그와 쿠션'],
+                    decor: ['식물', '양초', '따뜻한 조명']
+                },
+                'IMBA': {
+                    type: '파스텔 드림',
+                    title: '감성적인 몽상가',
+                    desc: '부드럽고 로맨틱한 분위기를 좋아합니다. 파스텔 컬러와 귀여운 소품으로 꾸민 나만의 공간을 원합니다.',
+                    colors: ['파스텔 핑크', '라벤더', '민트'],
+                    furniture: ['라운드 라인 가구', '벨벳 소재', '레이스 커튼'],
+                    decor: ['꽃 소품', '액자', '조명 가랜드']
+                },
+                'ICNF': {
+                    type: '갤러리 룸',
+                    title: '큐레이터 같은 당신',
+                    desc: '좋아하는 것들을 모으고 전시하듯 배치하는 것을 즐깁니다. 각 아이템마다 의미가 있는 공간입니다.',
+                    colors: ['화이트 베이스', '블랙', '원목'],
+                    furniture: ['오픈 선반', '디스플레이 장', '갤러리 조명'],
+                    decor: ['컬렉션 아이템', '액자 월', '조명 포인트']
+                },
+                'ICNA': {
+                    type: '빈티지 카페',
+                    title: '레트로를 사랑하는 감성파',
+                    desc: '오래된 것의 가치를 아는 당신. 빈티지 소품과 앤틱 가구로 시간이 쌓인 공간을 만듭니다.',
+                    colors: ['브라운', '크림', '머스타드'],
+                    furniture: ['앤틱 가구', '가죽 소파', '우드 테이블'],
+                    decor: ['LP판', '포스터', '빈티지 소품']
+                },
+                'ICBA': {
+                    type: '팝 아트 스튜디오',
+                    title: '창의적인 아티스트',
+                    desc: '대담한 색상과 독특한 디자인을 좋아합니다. 개성 넘치는 당신만의 아지트입니다.',
+                    colors: ['비비드 컬러', '네온', '블랙'],
+                    furniture: ['독특한 디자인 가구', '컬러풀한 의자', '아트 작품'],
+                    decor: ['네온사인', '포스터', '특이한 소품']
+                },
+                'EMNF': {
+                    type: '모던 오피스',
+                    title: '효율적인 실용주의자',
+                    desc: '깔끔하면서도 기능적인 공간을 선호합니다. 동선과 작업 효율을 최우선으로 생각합니다.',
+                    colors: ['화이트', '그레이', '네이비'],
+                    furniture: ['높이 조절 책상', '인체공학 의자', '시스템 선반'],
+                    decor: ['모니터 암', '케이블 정리', 'LED 조명']
+                },
+                'EMNA': {
+                    type: '어반 정글',
+                    title: '자연 친화적 활동가',
+                    desc: '도심 속 작은 정원을 만들고 싶어 합니다. 식물과 함께하는 힐링 공간입니다.',
+                    colors: ['그린', '화이트', '우드'],
+                    furniture: ['라탄 가구', '플랜트 스탠드', '자연 소재'],
+                    decor: ['다양한 식물', '마크라메', '자연광']
+                },
+                'EMBA': {
+                    type: '트로피칼 파라다이스',
+                    title: '에너지 넘치는 몽환가',
+                    desc: '활기차고 생동감 넘치는 공간을 만듭니다. 매일이 휴가 같은 느낌의 방입니다.',
+                    colors: ['코랄', '터콰이즈', '옐로우'],
+                    furniture: ['라운지 체어', '해먹', '비치 소품'],
+                    decor: ['야자수', '조개껍데기', '컬러 조명']
+                },
+                'ECNF': {
+                    type: '하비 스페이스',
+                    title: '열정적인 컬렉터',
+                    desc: '취미 활동을 위한 완벽한 공간입니다. 모든 것이 정리되어 있고 쉽게 접근 가능합니다.',
+                    colors: ['네이비', '화이트', '레드 포인트'],
+                    furniture: ['작업대', '수납장', '전시 선반'],
+                    decor: ['컬렉션', '작품', '조명']
+                },
+                'ECNA': {
+                    type: '보헤미안 아지트',
+                    title: '자유로운 영혼',
+                    desc: '규칙 없이 자유롭게 꾸민 공간입니다. 여행의 추억과 다양한 문화가 어우러집니다.',
+                    colors: ['어스 톤', '인디고', '오렌지'],
+                    furniture: ['로우 소파', '쿠션', '러그'],
+                    decor: ['태피스트리', '여행 기념품', '캔들']
+                },
+                'ECBA': {
+                    type: '네온 게임룸',
+                    title: '열정적인 엔터테이너',
+                    desc: '에너지 넘치고 즐거운 공간입니다. 친구들과 함께 시간 보내기 완벽한 방입니다.',
+                    colors: ['네온 블루', '퍼플', '핑크'],
+                    furniture: ['게이밍 체어', '바 테이블', '쿠션'],
+                    decor: ['LED 스트립', '포스터', '네온사인']
+                },
+                'IMNF': {
+                    type: '재팬디 스타일',
+                    title: '선(禪)의 미학을 아는 당신',
+                    desc: '일본과 북유럽의 조화로운 만남. 절제된 아름다움 속에서 평온함을 찾습니다.',
+                    colors: ['차콜', '베이지', '무광 블랙'],
+                    furniture: ['로우 베드', '좌식 테이블', '수납 가구'],
+                    decor: ['대나무', '돌', '화이트 조명']
+                },
+                'IMBF': {
+                    type: '키디 키치',
+                    title: '밝은 에너지의 소유자',
+                    desc: '귀엽고 발랄한 공간을 좋아합니다. 매일 기분 좋아지는 컬러풀한 방입니다.',
+                    colors: ['옐로우', '스카이블루', '코랄'],
+                    furniture: ['컬러 수납함', '빈백', '작은 테이블'],
+                    decor: ['캐릭터 소품', '스티커', '컬러 조명']
+                },
+                'ECBF': {
+                    type: '크리에이터 라운지',
+                    title: '아이디어가 넘치는 크리에이터',
+                    desc: '창작 활동을 위한 역동적인 공간입니다. 영감이 샘솟는 당신만의 스튜디오입니다.',
+                    colors: ['화이트', '옐로우', '블루'],
+                    furniture: ['높은 작업대', '무빙 체어', '모듈 가구'],
+                    decor: ['무드보드', '샘플', 'RGB 조명']
+                }
+            };
+
+            const design = designs[personality] || designs['IMNF'];
+            
+            document.getElementById('personalityType').textContent = design.type;
+            document.getElementById('personalityTitle').textContent = design.title;
+            document.getElementById('personalityDesc').textContent = design.desc;
+            
+            const recommendations = `
+                <div class="design-card">
+                    <h3>🎨 추천 컬러</h3>
+                    <ul>
+                        ${design.colors.map(c => `<li>${c}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="design-card">
+                    <h3>🛋️ 가구 스타일</h3>
+                    <ul>
+                        ${design.furniture.map(f => `<li>${f}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="design-card">
+                    <h3>✨ 데코 아이템</h3>
+                    <ul>
+                        ${design.decor.map(d => `<li>${d}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('designRecommendations').innerHTML = recommendations;
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('result').classList.add('show');
+        }
+
+        function restart() {
+            Object.keys(answers).forEach(key => delete answers[key]);
+            currentQ = 1;
+            
+            document.querySelectorAll('.question-section').forEach((q, i) => {
+                q.style.display = i === 0 ? 'block' : 'none';
+            });
+            
+            document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            document.getElementById('resultBtn').style.display = 'none';
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('quiz').style.display = 'block';
+            document.getElementById('progress').style.width = '0%';
+        }
+    </script>
+</body>
+</html>
